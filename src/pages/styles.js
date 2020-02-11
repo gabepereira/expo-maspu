@@ -29,3 +29,26 @@ export default StyleSheet.create({
         color: '#ffffff',
     },
 });
+
+const cardStyle = StyleSheet.create({
+    card: {
+        marginBottom: 24,
+        marginHorizontal: 24,
+    },
+    cover: {
+        padding: 12,
+        backgroundColor: '#ffffff',
+    },
+    content: {
+        marginTop: 12,
+    },
+    title: {
+        fontFamily: 'Circular',
+        fontSize: 16,
+    },
+    price: {
+        fontFamily: 'Circular',
+    },
+});
+
+export { cardStyle };

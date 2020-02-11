@@ -37,7 +37,14 @@ export default ({ navigation }) => {
     };
 
     return (
-        <View style={(styles.container, styles.box)}>
+        <View
+            style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 12,
+            }}
+        >
             <Logo
                 width={144}
                 height={48}

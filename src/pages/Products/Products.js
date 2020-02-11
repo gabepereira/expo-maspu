@@ -3,7 +3,7 @@ import api from '../../services/api';
 import { formatCurrency } from '../../services/formatters';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import { Card, Title, Paragraph } from 'react-native-paper';
-import styles from '../styles';
+import styles, { cardStyle } from '../styles';
 
 export default ({ navigation }) => {
     const [products, setProducts] = useState([]);
@@ -19,15 +19,27 @@ export default ({ navigation }) => {
     }, []);
 
     return (
-        <View style={styles.view}>
-            <Text style={styles.title}>Produtos</Text>
-            <ScrollView showsHorizontalScrollIndicator={false}>
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: '#303030',
+            }}
+        >
+            <ScrollView
+                showsVerticalScrollIndicator={true}
+                showsHorizontalScrollIndicator={false}
+            >
                 {products.map((product, i) => (
                     <Card
                         key={i}
-                        style={cardStyle.card}
+                        style={[
+                            cardStyle.card,
+                            { marginTop: i === 0 ? 24 : 0 },
+                        ]}
                         onPress={() =>
-                            navigation.navigate('Product', product.id)
+                            navigation.navigate('Product', {
+                                productId: product._id,
+                            })
                         }
                     >
                         <Card.Cover
@@ -50,24 +62,3 @@ export default ({ navigation }) => {
         </View>
     );
 };
-
-const cardStyle = StyleSheet.create({
-    card: {
-        marginHorizontal: 12,
-        marginBottom: 24,
-    },
-    cover: {
-        padding: 12,
-        backgroundColor: '#ffffff',
-    },
-    content: {
-        marginTop: 12,
-    },
-    title: {
-        fontFamily: 'Circular',
-        fontSize: 16,
-    },
-    price: {
-        fontFamily: 'Circular',
-    },
-});
