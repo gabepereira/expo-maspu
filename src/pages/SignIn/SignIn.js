@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import api from '../../services/api';
 import { set } from '../../services/store';
 import { View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { Logo } from '../../components';
 import styles from '../styles';
+import { LoaderContext } from '../../services/context';
 
 export default ({ navigation }) => {
     const [inputs, setInputs] = useState({});
     const [error, setError] = useState(false);
+    const { setLoading } = useContext(LoaderContext);
+
+    useEffect(() => {
+        setLoading(false);
+    }, []);
 
     const handleInputChange = (input, value) => {
         setInputs(inputs => ({
@@ -20,6 +26,7 @@ export default ({ navigation }) => {
     const handleInputFocus = () => setError(false);
 
     const handleSubmit = () => {
+        setLoading(true);
         api.post('/auth', { ...inputs })
             .then(({ data }) => {
                 const { token } = data;
@@ -31,6 +38,7 @@ export default ({ navigation }) => {
                     });
             })
             .catch(error => {
+                setLoading(false);
                 setError(true);
                 console.error(error);
             });

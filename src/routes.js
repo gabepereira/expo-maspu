@@ -1,11 +1,11 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Product, Products, SignIn } from './pages';
 import { Header } from './components';
 import { MaterialIcons } from '@expo/vector-icons';
+import { FetchContext } from './services/context';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,8 +68,17 @@ const Routes = () => (
     </Stack.Navigator>
 );
 
-export default () => (
-    <NavigationContainer>
-        <Routes />
-    </NavigationContainer>
-);
+export default () => {
+    const [fetch, setFetch] = useState({
+        Home: false,
+        Products: false,
+    });
+
+    return (
+        <FetchContext.Provider value={{ fetch, setFetch }}>
+            <NavigationContainer>
+                <Routes />
+            </NavigationContainer>
+        </FetchContext.Provider>
+    );
+};

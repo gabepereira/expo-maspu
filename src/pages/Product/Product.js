@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import api from '../../services/api';
 import { get } from '../../services/store';
 import { formatCurrency } from '../../services/formatters';
@@ -6,11 +6,14 @@ import { StyleSheet, View, Text } from 'react-native';
 import { Button, Card, Paragraph } from 'react-native-paper';
 import { CartCounter } from '../../components';
 import styles, { cardStyle } from '../styles';
+import { FetchContext, LoaderContext } from '../../services/context';
 
 export default ({ navigation, route }) => {
     const [product, setProduct] = useState({});
     const [quantity, setQuantity] = useState(0);
     const { productId } = route.params;
+    const { setFetch } = useContext(FetchContext);
+    const { loading, setLoading } = useContext(LoaderContext);
 
     useEffect(() => {
         api.get(`/product/${productId}`)
@@ -27,9 +30,14 @@ export default ({ navigation, route }) => {
         })
             .then(({ data }) => {
                 console.log(data);
+                setFetch(pages => ({ ...pages, Home: true }));
+                setLoading(true);
                 navigation.navigate('Home');
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+                setLoading(false);
+                console.error(error);
+            });
     };
 
     return (
