@@ -5,11 +5,12 @@ import { View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { Logo } from '../../components';
 import styles from '../styles';
-import { LoaderContext } from '../../services/context';
+import { FetchContext, LoaderContext } from '../../services/context';
 
 export default ({ navigation }) => {
     const [inputs, setInputs] = useState({});
     const [error, setError] = useState(false);
+    const { setFetch } = useContext(FetchContext);
     const { setLoading } = useContext(LoaderContext);
 
     useEffect(() => {
@@ -31,7 +32,10 @@ export default ({ navigation }) => {
             .then(({ data }) => {
                 const { token } = data;
                 set('token', token)
-                    .then(() => navigation.navigate('Views'))
+                    .then(() => {
+                        setFetch(fetch => ({ ...fetch, Home: true }));
+                        navigation.navigate('Views');
+                    })
                     .catch(error => {
                         setError(true);
                         console.error(error);

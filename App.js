@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Routes from './src/routes';
 import * as Font from 'expo-font';
 import { LoaderContext } from './src/services/context';
-import { ActivityIndicator, Colors } from 'react-native-paper';
+import { ActivityIndicator, Colors, Provider } from 'react-native-paper';
 
 Font.loadAsync({
     Circular: require('./assets/fonts/circular-bold.woff'),
@@ -27,7 +27,9 @@ export default () => {
                     color={Colors.red800}
                 />
             )}
-            <Routes />
+            <Provider>
+                <Routes />
+            </Provider>
         </LoaderContext.Provider>
     );
 };

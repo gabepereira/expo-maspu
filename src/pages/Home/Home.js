@@ -10,6 +10,7 @@ import { FetchContext, LoaderContext } from '../../services/context';
 export default ({ navigation, route }) => {
     const [user, setUser] = useState('');
     const [sale, setSale] = useState({});
+    const [hasSale, setHasSale] = useState(false);
     const [value, setValue] = useState(0);
     const { fetch, setFetch } = useContext(FetchContext);
     const { loading, setLoading } = useContext(LoaderContext);
@@ -32,18 +33,27 @@ export default ({ navigation, route }) => {
                 api.get(`/user/getUserData/${token}`)
                     .then(({ data }) => {
                         setUser(data.user);
-                        if (data.sale) {
+                        let value = 0;
+                        setHasSale(
+                            Object.keys(data.sale).length ? true : false
+                        );
+                        if (Object.keys(data.sale).length) {
                             setSale(data.sale);
-                            let value = 0;
                             data.sale.items.map(
                                 ({ quantity, product }) =>
                                     (value += quantity * product.price)
                             );
-                            setValue(value);
+                        } else {
+                            setSale({
+                                items: [],
+                            });
                         }
-                        console.log(data);
+                        setValue(value);
                     })
-                    .catch(() => navigation.navigate('SignIn'))
+                    .catch(error => {
+                        console.error(error);
+                        navigation.navigate('SignIn');
+                    })
                     .finally(() => setLoading(false));
             })
             .catch(() => navigation.navigate('SignIn'));
@@ -66,11 +76,10 @@ export default ({ navigation, route }) => {
                 <View>
                     <Text style={homeStyle.text}>Produtos recentes</Text>
                     <View style={homeStyle.recentProducts}>
-                        {sale.items ? (
+                        {hasSale ? (
                             sale.items.map(({ product }, i) => (
-                                <View style={homeStyle.card}>
+                                <View key={i} style={homeStyle.card}>
                                     <Card
-                                        key={i}
                                         onPress={() =>
                                             navigation.navigate('Product', {
                                                 productId: product._id,
@@ -86,7 +95,9 @@ export default ({ navigation, route }) => {
                                 </View>
                             ))
                         ) : (
-                            <></>
+                            <Text style={{ color: '#ffffff' }}>
+                                Você não adicionou nenhum produto recentemente
+                            </Text>
                         )}
                     </View>
                 </View>
@@ -106,8 +117,8 @@ const homeStyle = StyleSheet.create({
         fontFamily: 'Circular',
     },
     recentProducts: {
-        marginVertical: 12,
         flex: 1,
+        marginVertical: 12,
         width: '100%',
         flexDirection: 'row',
         flexWrap: 'wrap',

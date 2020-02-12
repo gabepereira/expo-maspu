@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { Appbar } from 'react-native-paper';
+import { Appbar, Menu, Provider } from 'react-native-paper';
 
 export default props => {
     const [routeName, setRouteName] = useState('');
+    const [visible, setVisible] = useState(false);
     const { navigation, scene } = props;
 
     useEffect(() => {
         setRouteName(scene.route.name);
     }, [scene.route.name]);
+
+    const handleSignOut = () => {
+        setVisible(false);
+        navigation.navigate('SignIn');
+    };
 
     return (
         <Appbar style={headerStyle.header}>
@@ -20,11 +26,21 @@ export default props => {
                 />
             )}
             <Text style={headerStyle.title}>{routeName}</Text>
-            <Appbar.Action
-                size={18}
-                icon="dots-vertical"
-                onPress={() => console.log('Pressed delete')}
-            />
+
+            <Menu
+                visible={visible}
+                onDismiss={() => setVisible(false)}
+                anchor={
+                    <Appbar.Action
+                        size={18}
+                        color="#ffffff"
+                        icon="dots-vertical"
+                        onPress={() => setVisible(true)}
+                    />
+                }
+            >
+                <Menu.Item onPress={handleSignOut} title="Sign out" />
+            </Menu>
         </Appbar>
     );
 };
