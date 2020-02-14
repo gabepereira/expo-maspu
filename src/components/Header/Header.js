@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { Appbar, Menu, Provider } from 'react-native-paper';
+import React, { useState, useContext } from 'react';
+import { StyleSheet, Text } from 'react-native';
+import { Appbar, Menu } from 'react-native-paper';
 import { HeaderContext } from '../../services/context';
 
 export default ({ navigation }) => {

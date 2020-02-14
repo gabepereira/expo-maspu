@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import api from '../../services/api';
 import { get } from '../../services/store';
 import { formatCurrency } from '../../services/formatters';
+import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, View, Text } from 'react-native';
 import { Button, Card, Paragraph } from 'react-native-paper';
 import { CartCounter } from '../../components';
@@ -21,15 +22,19 @@ export default ({ navigation, route }) => {
    const { setHeader } = useContext(HeaderContext);
 
    useEffect(() => {
-      setHeader(header => ({
-         ...header,
-         routeName: 'Produto',
-         showBack: true,
-      }));
       api.get(`/product/${productId}`)
          .then(({ data }) => setProduct(data))
          .catch(error => console.error(error));
    }, []);
+
+   useFocusEffect(
+      useCallback(() => {
+         setHeader({
+            routeName: 'Produto',
+            showBack: true,
+         });
+      }, [route])
+   );
 
    const handleAddProduct = async data => {
       const token = await get('token');

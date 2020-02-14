@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import api from '../../services/api';
 import { formatCurrency } from '../../services/formatters';
+import { useFocusEffect } from '@react-navigation/native';
 import { get } from '../../services/store';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { Card } from 'react-native-paper';
 import styles, { cardStyle } from '../styles';
 import {
@@ -33,13 +33,14 @@ export default ({ navigation, route }) => {
       }
    }, [fetch]);
 
-   useFocusEffect(() => {
-      setHeader(header => ({
-         ...header,
-         routeName: 'Painel',
-         showBack: false,
-      }));
-   }, []);
+   useFocusEffect(
+      useCallback(() => {
+         setHeader({
+            routeName: 'Painel',
+            showBack: false,
+         });
+      }, [route])
+   );
 
    const fetchUserData = async () => {
       get('token')

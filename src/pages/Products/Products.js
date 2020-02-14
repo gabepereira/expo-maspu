@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import api from '../../services/api';
 import { formatCurrency } from '../../services/formatters';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, ScrollView, View, Text } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Card, Title, Paragraph } from 'react-native-paper';
-import styles, { cardStyle } from '../styles';
+import { cardStyle } from '../styles';
 import { HeaderContext } from '../../services/context';
 
 export default ({ navigation, route }) => {
@@ -14,8 +14,6 @@ export default ({ navigation, route }) => {
    useEffect(() => {
       api.get('/products')
          .then(({ data }) => {
-            console.log(data);
-            console.log(route);
             const products = data.filter(
                product => product.category === route.params.categoryId
             );
@@ -25,13 +23,14 @@ export default ({ navigation, route }) => {
          .finally(() => {});
    }, []);
 
-   useFocusEffect(() => {
-      setHeader(header => ({
-         ...header,
-         routeName: 'Produtos',
-         showBack: true,
-      }));
-   }, []);
+   useFocusEffect(
+      useCallback(() => {
+         setHeader({
+            routeName: 'Produtos',
+            showBack: true,
+         });
+      }, [route])
+   );
 
    return (
       <View

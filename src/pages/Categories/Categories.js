@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { StyleSheet, ScrollView, View, Text } from 'react-native';
-import { Card, Title, Paragraph } from 'react-native-paper';
+import React, { useContext, useCallback } from 'react';
+import { ScrollView, View, Text } from 'react-native';
+import { Card, Title } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import styles, { cardStyle } from '../styles';
 import { HeaderContext } from '../../services/context';
@@ -20,17 +20,17 @@ const categories = [
    },
 ];
 
-export default ({ navigation }) => {
+export default ({ navigation, route }) => {
    const { setHeader } = useContext(HeaderContext);
 
-   useFocusEffect(() => {
-      setHeader(header => ({
-         ...header,
-         routeName: 'Categorias',
-         showBack: false,
-      }));
-   }, []);
-
+   useFocusEffect(
+      useCallback(() => {
+         setHeader({
+            routeName: 'Categorias',
+            showBack: false,
+         });
+      }, [route])
+   );
    return (
       <View style={styles.view}>
          <Text style={styles.title}>Categorias</Text>
